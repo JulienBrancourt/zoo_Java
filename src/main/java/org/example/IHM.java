@@ -3,10 +3,7 @@ package org.example;
 import org.example.Entity.Animal;
 import org.example.Entity.RegimeAlimentaire;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +12,6 @@ import java.util.Scanner;
 
 
 public class IHM {
-
     private static Scanner scanner;
 
     public IHM() {
@@ -23,10 +19,10 @@ public class IHM {
     }
 
     public void start () {
-        String choix;
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("demo_jpa");
-
         EntityManager em = emf.createEntityManager();
+
+        String choix;
 
         while(true){
             System.out.println(" ---- Zoo -----");
@@ -79,7 +75,6 @@ public class IHM {
             case "2" -> choixRegimeAlimentaire = RegimeAlimentaire.CARNIVORE;
             case "3" -> choixRegimeAlimentaire = RegimeAlimentaire.OMNIVORE;
             default -> choixRegimeAlimentaire = RegimeAlimentaire.OMNIVORE;
-
         }
 
         animal.setName(nom);
@@ -110,7 +105,7 @@ public class IHM {
 
         System.out.println("Quel nom ?");
         String nom = scanner.nextLine();
-        Query query = em.createQuery("select a from Animal a where a.name = :name");
+        TypedQuery<Animal> query = em.createQuery("select a from Animal a where a.name like :name", Animal.class);
         query.setParameter("name", nom);
         List<Animal> animals = query.getResultList();
         System.out.println(animals);
